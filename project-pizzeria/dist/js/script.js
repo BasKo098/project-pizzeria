@@ -58,6 +58,7 @@ const select = {
       thisProduct.id = id;
       thisProduct.data = data;
       thisProduct.renderInMenu();
+      thisProduct.initAccordion();
       console.log('new Product:', thisProduct);
     } 
 
@@ -74,7 +75,31 @@ const select = {
 
         /*add element to menu*/
         menuContainer.appendChild(thisProduct.element);
-      }
+    }
+
+    initAccordion() {
+      const thisProduct = this;
+    
+      /* Znajdź element, który będzie reagować na kliknięcie (trigger) */
+      const clickableTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
+    
+      /* START: dodaj nasłuchiwanie na zdarzenie kliknięcia na elemencie clickableTrigger */
+      clickableTrigger.addEventListener('click', function(event) {
+        /* Zapobiegnij domyślnej akcji dla tego zdarzenia (czyli np. przejścia do linku) */
+        event.preventDefault();
+    
+        /* Znajdź aktywny produkt (produkt, który ma klasę active) */
+        const activeProduct = document.querySelector(select.all.menuProductsActive);
+    
+        /* Jeśli istnieje aktywny produkt i nie jest to thisProduct.element, usuń klasę active z tego produktu */
+        if (activeProduct && activeProduct !== thisProduct.element) {
+          activeProduct.classList.remove(classNames.menuProduct.wrapperActive);
+        }
+    
+        /* Przełącz klasę active na thisProduct.element za pomocą toggle */
+        thisProduct.element.classList.toggle(classNames.menuProduct.wrapperActive);
+      });
+    }
   }
 
   const app = {
