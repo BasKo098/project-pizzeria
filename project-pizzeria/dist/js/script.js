@@ -80,6 +80,7 @@ const select = {
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
     }
 
     initAccordion() {
@@ -117,40 +118,42 @@ const select = {
 
     processOrder() {
       const thisProduct = this;
-    
-      // [DONE] covert form to object structure e.g. { sauce: ['tomato'], toppings: ['olives', 'redPeppers']}
       const formData = utils.serializeFormToObject(thisProduct.form);
-    
-      // [DONE] set price to default price
       let price = thisProduct.data.price;
-    
-      // [DONE] for every category (param)...
+      const allOptionImages = thisProduct.imageWrapper.querySelectorAll('.product__images');
+      console.log('All image ')
+      console.log(allOptionImages);
+      allOptionImages.forEach(image => {
+        image.classList.remove(classNames.menuProduct.imageVisible);
+      });
+      console.log('allOption Images ');
+      console.log(allOptionImages);
       for(let paramId in thisProduct.data.params) {
-        // [DONE] determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes'... }
         const param = thisProduct.data.params[paramId];
-    
-        // [DONE] for every option in this category
         for(let optionId in param.options) {
-          // [DONE] determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
           const option = param.options[optionId];
-
-          // [DONE] check if there is param with a name of paramId in formData and if it includes optionId
-          if(formData[paramId] && formData[paramId].includes(optionId)) {
-
-            // [DONE] check if the option is not default
+          const optionImage = thisProduct.imageWrapper.querySelector(`.product__images.${optionId}`);
+          console.log('optionImage ');
+          console.log(optionImage);
+          const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
+          const visible = classNames.menuProduct.imageVisible;
+          if(optionSelected) {
             if(!option.default) {
               price += parseFloat(option.price); 
-              // [DONE] add option price to price variable
+              
+              if(optionImage) {
+                optionImage.classList.add(visible);
+              }
             }
             } else {
-            // [DONE] check if the option is default
             if(option.default) {
-              // [DONE] reduce price variable
               price -= parseFloat(option.price);
+              if (optionImage) {
+                optionImage.classList.remove(visible);
+              }
             }
-            } 
+          } 
         }
-        // [DONE] update calculated price in the HTML
         thisProduct.priceElem.innerHTML = price;
       }
     }  
