@@ -92,6 +92,7 @@ const templates = {
       const thisProduct = this;
       thisProduct.id = id;
       thisProduct.data = data;
+      thisProduct.dom = {}
       thisProduct.renderInMenu();
       thisProduct.getElements();
       thisProduct.initAccordion();
@@ -277,8 +278,8 @@ const templates = {
     constructor(element)  {
       const thisCart = this;
 
-      this Cart.products = [];
-      this Cart.getElements(element);
+      thisCart.products = [];
+      thisCart.getElements(element);
       console.log('new Cart', thisCart);
     }
 
@@ -287,6 +288,13 @@ const templates = {
 
       thisCart.dom ={};
       thisCart.dom.wrapper = element;
+      thisCart.dom.toggleTrigger = thisCart.element.querySelector(select.cart.toggleTrigger);
+    }
+
+    initActions() {
+      const thisCart = this;
+
+
     }
   }  
 
@@ -313,6 +321,12 @@ const templates = {
 
       thisApp.initData();
       thisApp.initMenu();
+    },
+
+    initCart: function(){
+      const thisApp = this;
+      const cartElem = document.querySelector(select.containerOf.cart);
+      thisApp.cart = new Cart(cartElem);
     },
   };
 
