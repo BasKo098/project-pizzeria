@@ -173,8 +173,6 @@ const templates = {
       allOptionImages.forEach(image => {
         image.classList.remove(visible);
       });
-      //console.log('allOption Images ');
-      //console.log(allOptionImages);
 
       for(let paramId in thisProduct.data.params) {
         const param = thisProduct.data.params[paramId];
@@ -182,8 +180,6 @@ const templates = {
         for(let optionId in param.options) {
           const option = param.options[optionId];
           const optionImage = thisProduct.dom.imageWrapper.querySelector(`.${paramId}-${optionId}`);
-          //console.log('optionImage ');
-          //console.log(optionImage);
 
           const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
           if(optionSelected) {
@@ -205,9 +201,9 @@ const templates = {
           } 
         }
       }
-      thisProduct.priceSigle = price;
+      thisProduct.priceSingle = price; 
       thisProduct.amount = thisProduct.amountWidget.value;
-      price *=thisProduct.amountWidget.value;
+      price *= thisProduct.amountWidget.value;
       thisProduct.dom.priceElem.innerHTML = price;
     }  
 
@@ -261,7 +257,6 @@ const templates = {
       app.cart.add(thisProduct.preparateCartProduct());
     }
   }
-  
   class AmountWidget {
       constructor(element) {
         const thisWidget = this;
@@ -343,6 +338,7 @@ const templates = {
       thisCart.dom ={};
       thisCart.dom.wrapper = element;
       thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
+      thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
     }
 
     initActions() {
@@ -353,9 +349,12 @@ const templates = {
       });
     }
 
-    add (menuProduct) {
-      //const thisCart = this;
-      console.log('adding product', menuProduct);
+    add(menuProduct) {
+      const thisCart = this;
+      const generatedHTML = templates.cartProduct(menuProduct);
+      const element = utils.createDOMFromHTML(generatedHTML);
+      thisCart.dom.productList.appendChild(element);
+      console.log(menuProduct);
     }
   }  
 
