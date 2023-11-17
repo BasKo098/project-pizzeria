@@ -331,7 +331,6 @@ const templates = {
       const thisApp = this;
       const cartElem = document.querySelector(select.containerOf.cart);
       thisApp.cart = new Cart(cartElem);
-      thisApp.cart.initActions();
     },
   };
   app.init();
