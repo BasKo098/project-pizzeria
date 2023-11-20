@@ -355,8 +355,9 @@ const templates = {
         thisCart.update();
       })
 
-      thisCart.dom.productList.addEventListener('remove', function(){
-      thisCart.remove() });
+      thisCart.dom.productList.addEventListener('remove', function(event){
+      thisCart.remove(event.detail.cartProduct) 
+      });
     }
 
     add(menuProduct) {
@@ -401,14 +402,18 @@ const templates = {
       console.log('total Price: ' + thisCart.totalPrice);
     }
 
-
     remove(productToRemove) {
-      productToRemove.dom.wrapper.remove();
-      const indexToRemove = this.products.indexOf(productToRemove);
-      this.products.splice(indexToRemove, 1);
-      this.update();
-    }  
+      const thisCart = this;
+    
+      if (productToRemove instanceof CartProduct) {
+        productToRemove.dom.wrapper.remove();
+        const indexToRemove = thisCart.products.indexOf(productToRemove);
+        thisCart.products.splice(indexToRemove, 1);
+        thisCart.update();
+      } 
+    }
   }  
+
   class CartProduct {
     constructor(menuProduct, element) {
       const thisCartProduct = this;
@@ -449,14 +454,14 @@ const templates = {
   
     remove() {
       const thisCartProduct = this;
-  
+    
       const event = new CustomEvent('remove', {
         bubbles: true,
         detail: {
           cartProduct: thisCartProduct,
         },
       });
-  
+    
       thisCartProduct.dom.wrapper.dispatchEvent(event);
     }
   
