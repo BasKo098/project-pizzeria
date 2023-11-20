@@ -246,7 +246,7 @@ const templates = {
         amount: thisProduct.amount,
         priceSingle: thisProduct.priceSingle,
         price: thisProduct.priceSingle * thisProduct.amountWidget.value,
-        params: this.prepareCartProductParams(),
+        params: thisProduct.prepareCartProductParams(),
       };
       return productSummary;
     }
@@ -296,6 +296,7 @@ const templates = {
       
       announce(){
           const thisWidget = this;
+          console.log('AmountWidget updated event triggered');
 
           const event = new CustomEvent('updated', {
             bubbles: true
@@ -350,9 +351,12 @@ const templates = {
         thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
       });
 
-      thisCart.dom.productList.addEventListener('update', function(){
+      thisCart.dom.productList.addEventListener('updated', function(){
         thisCart.update();
       })
+
+      thisCart.dom.productList.addEventListener('remove', function(){
+      thisCart.remove() });
     }
 
     add(menuProduct) {
@@ -365,36 +369,47 @@ const templates = {
     }
 
     update() {
+      
       const thisCart = this;
-
+      console.log('Cart updated event triggered');
       const deliveryFee = settings.cart.defaultDeliveryFee;
       let totalNumber = 0;
       let subtotalPrice = 0;
-
-      for (let product of thisCart.products){
+    
+      for (let product of thisCart.products) {
         totalNumber += product.amount;
         subtotalPrice += product.price;
       }
-      
+    
       if (!thisCart.products.length) {
         thisCart.totalPrice = 0;
-      } 
-
+      }
+    
       thisCart.totalPrice = subtotalPrice + deliveryFee;
-
+    
       thisCart.dom.deliveryFee.innerHTML = deliveryFee;
       thisCart.dom.totalNumber.innerHTML = totalNumber;
       thisCart.dom.subtotalPrice.innerHTML = subtotalPrice;
-
-      thisCart.dom.totalPrice.forEach(priceElement => priceElement.innerHTML = thisCart.totalPrice);
-      
-      console.log('total Number: ' + totalNumber)
+    
+      for (let singleTotalPrice of thisCart.dom.totalPrice) {
+        singleTotalPrice.innerHTML = thisCart.totalPrice;
+      }
+    
+      console.log('total Number: ' + totalNumber);
       console.log('subtotalPrice : ' + subtotalPrice);
       console.log('deliveryFee: ' + deliveryFee);
       console.log('total Price: ' + thisCart.totalPrice);
     }
-  } 
-  class CartProduct { 
+
+
+    remove(productToRemove) {
+      productToRemove.dom.wrapper.remove();
+      const indexToRemove = this.products.indexOf(productToRemove);
+      this.products.splice(indexToRemove, 1);
+      this.update();
+    }  
+  }  
+  class CartProduct {
     constructor(menuProduct, element) {
       const thisCartProduct = this;
       thisCartProduct.id = menuProduct.id;
@@ -407,9 +422,9 @@ const templates = {
       thisCartProduct.initAmountWidget();
       thisCartProduct.initActions();
     }
-
+  
     getElement(element) {
-      const  thisCartProduct = this;
+      const thisCartProduct = this;
       thisCartProduct.dom = {
         wrapper: element,
         amountWidget: element.querySelector(select.cartProduct.amountWidget),
@@ -418,12 +433,12 @@ const templates = {
         remove: element.querySelector(select.cartProduct.remove),
       };
     }
-
+  
     initAmountWidget() {
       const thisCartProduct = this;
       thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidget);
-
-      thisCartProduct.dom.amountWidget.addEventListener('updated', function() {
+  
+      thisCartProduct.dom.amountWidget.addEventListener('updated', function () {
         const amount = thisCartProduct.amountWidget.value;
         const price = thisCartProduct.priceSingle;
         thisCartProduct.amount = amount;
@@ -431,18 +446,34 @@ const templates = {
         thisCartProduct.dom.price.innerHTML = price * amount;
       });
     }
-
+  
+    remove() {
+      const thisCartProduct = this;
+  
+      const event = new CustomEvent('remove', {
+        bubbles: true,
+        detail: {
+          cartProduct: thisCartProduct,
+        },
+      });
+  
+      thisCartProduct.dom.wrapper.dispatchEvent(event);
+    }
+  
     initActions() {
       const thisCartProduct = this;
-      thisCartProduct.dom.edit.addEventListener('click', event => {
-        event.preventDefault();
-      });
-      thisCartProduct.dom.remove.addEventListener('click', event =>{
-        event.preventDefault();
-        console.log('removed');
-        thisCartProduct.remove();
-      })
-
+      if (thisCartProduct.dom.edit) {
+        thisCartProduct.dom.edit.addEventListener('click', (event) => {
+          event.preventDefault();
+        });
+      }
+      if (thisCartProduct.dom.remove) {
+        thisCartProduct.dom.remove.addEventListener('click', (event) => {
+          event.preventDefault();
+          console.log('removed');
+          thisCartProduct.remove();
+        });
+      }
     }
   }
 
