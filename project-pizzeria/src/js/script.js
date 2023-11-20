@@ -260,8 +260,6 @@ const templates = {
   class AmountWidget {
       constructor(element) {
         const thisWidget = this;
-        console.log('AmountWidget: ', thisWidget);
-        console.log('constructor arguments: ', element);
         
         thisWidget.getElements(element);
         thisWidget.initActions()
@@ -299,7 +297,9 @@ const templates = {
       announce(){
           const thisWidget = this;
 
-          const event = new Event('updated');
+          const event = new CustomEvent('updated', {
+            bubbles: true
+          });
           thisWidget.element.dispatchEvent(event);
         }
 
@@ -328,7 +328,6 @@ const templates = {
       thisCart.products = [];
       thisCart.getElements(element);
       thisCart.initActions();
-      console.log('new Cart', thisCart);
     }
 
     getElements(element) {
@@ -338,6 +337,10 @@ const templates = {
       thisCart.dom.wrapper = element;
       thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
       thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
+      thisCart.dom.deliveryFee = thisCart.dom.wrapper.querySelector(select.cart.deliveryFee);
+      thisCart.dom.subtotalPrice = thisCart.dom.wrapper.querySelector(select.cart.subtotalPrice);
+      thisCart.dom.totalPrice = thisCart.dom.wrapper.querySelectorAll(select.cart.totalPrice);
+      thisCart.dom.totalNumber = thisCart.dom.wrapper.querySelector(select.cart.totalNumber);
     }
 
     initActions() {
@@ -346,52 +349,51 @@ const templates = {
         event.preventDefault();
         thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
       });
+
+      thisCart.dom.productList.addEventListener('update', function(){
+        thisCart.update();
+      })
     }
 
     add(menuProduct) {
       const thisCart = this;
       const generatedHTML = templates.cartProduct(menuProduct);
-      const element = utils.createDOMFromHTML(generatedHTML);
-      thisCart.dom.productList.appendChild(element);
-      thisCart.products.push(new CartProduct(menuProduct, element));
-      console.log('thisCart.products');
-      console.log(menuProduct);
+      const generatedDOM = utils.createDOMFromHTML(generatedHTML);
+      thisCart.dom.productList.appendChild(generatedDOM);
+      thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
+      thisCart.update();
     }
-  }  
 
-  const app = {
-    initMenu: function(){
-      const thisApp = this;
-      for(let productData in thisApp.data.products) {
-        new Product(productData, thisApp.data.products[productData]);
+    update() {
+      const thisCart = this;
+
+      const deliveryFee = settings.cart.defaultDeliveryFee;
+      let totalNumber = 0;
+      let subtotalPrice = 0;
+
+      for (let product of thisCart.products){
+        totalNumber += product.amount;
+        subtotalPrice += product.price;
       }
-    },  
-    
-    initData: function(){
-    const thisApp = this;
-    thisApp.data = dataSource;
-    },
+      
+      if (!thisCart.products.length) {
+        thisCart.totalPrice = 0;
+      } 
 
-    init: function(){
-      const thisApp = this;
-      console.log('*** App starting ***');
-      console.log('thisApp:', thisApp);
-      console.log('classNames:', classNames);
-      console.log('settings:', settings);
-      console.log('templates:', templates);
+      thisCart.totalPrice = subtotalPrice + deliveryFee;
 
-      thisApp.initData();
-      thisApp.initMenu();
-      thisApp.initCart();
-    },
+      thisCart.dom.deliveryFee.innerHTML = deliveryFee;
+      thisCart.dom.totalNumber.innerHTML = totalNumber;
+      thisCart.dom.subtotalPrice.innerHTML = subtotalPrice;
 
-    initCart: function(){
-      const thisApp = this;
-      const cartElem = document.querySelector(select.containerOf.cart);
-      thisApp.cart = new Cart(cartElem);
-    },
-  };
-
+      thisCart.dom.totalPrice.forEach(priceElement => priceElement.innerHTML = thisCart.totalPrice);
+      
+      console.log('total Number: ' + totalNumber)
+      console.log('subtotalPrice : ' + subtotalPrice);
+      console.log('deliveryFee: ' + deliveryFee);
+      console.log('total Price: ' + thisCart.totalPrice);
+    }
+  } 
   class CartProduct { 
     constructor(menuProduct, element) {
       const thisCartProduct = this;
@@ -403,8 +405,7 @@ const templates = {
       thisCartProduct.params = menuProduct.params;
       thisCartProduct.getElement(element);
       thisCartProduct.initAmountWidget();
-
-      console.log(thisCartProduct);
+      thisCartProduct.initActions();
     }
 
     getElement(element) {
@@ -421,7 +422,7 @@ const templates = {
     initAmountWidget() {
       const thisCartProduct = this;
       thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidget);
-      
+
       thisCartProduct.dom.amountWidget.addEventListener('updated', function() {
         const amount = thisCartProduct.amountWidget.value;
         const price = thisCartProduct.priceSingle;
@@ -432,9 +433,52 @@ const templates = {
     }
 
     initActions() {
+      const thisCartProduct = this;
+      thisCartProduct.dom.edit.addEventListener('click', event => {
+        event.preventDefault();
+      });
+      thisCartProduct.dom.remove.addEventListener('click', event =>{
+        event.preventDefault();
+        console.log('removed');
+        thisCartProduct.remove();
+      })
 
     }
-
   }
+
+  const app = {
+    initMenu: function(){
+      const thisApp = this;
+      for(let productData in thisApp.data.products) {
+        new Product(productData, thisApp.data.products[productData]);
+      }
+    },  
+    
+    initData: function(){
+    const thisApp = this;
+    thisApp.data = dataSource;
+    },
+
+    initCart: function(){
+      const thisApp = this;
+      const cartElem = document.querySelector(select.containerOf.cart);
+      thisApp.cart = new Cart(cartElem);
+    },
+
+    init: function(){
+      const thisApp = this;
+
+      console.log('*** App starting ***');
+      console.log('thisApp:', thisApp);
+      console.log('classNames:', classNames);
+      console.log('settings:', settings);
+      console.log('templates:', templates);
+
+      thisApp.initData();
+      thisApp.initMenu();
+      thisApp.initCart();
+    },
+  };
+
   app.init();
 }
