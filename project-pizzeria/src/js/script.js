@@ -171,12 +171,7 @@ const templates = {
       const thisProduct = this;
       const formData = utils.serializeFormToObject(thisProduct.dom.form);
       let price = thisProduct.data.price;
-      const allOptionImages = thisProduct.dom.imageWrapper.querySelectorAll('.product__images');
       let visible = classNames.menuProduct.imageVisible;
-      
-      allOptionImages.forEach(image => {
-        image.classList.remove(visible);
-      });
 
       for(let paramId in thisProduct.data.params) {
         const param = thisProduct.data.params[paramId];
@@ -185,6 +180,11 @@ const templates = {
           const option = param.options[optionId];
           const optionImage = thisProduct.dom.imageWrapper.querySelector(`.${paramId}-${optionId}`);
 
+          console.log('Option Image:', optionImage);
+          if (optionImage != null){
+            optionImage.classList.remove(visible);
+          }
+          
           const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
           if(optionSelected) {
 
@@ -205,6 +205,7 @@ const templates = {
           } 
         }
       }
+
       thisProduct.priceSingle = price; 
       thisProduct.amount = thisProduct.amountWidget.value;
       price *= thisProduct.amountWidget.value;
@@ -462,7 +463,7 @@ const templates = {
         })
         .catch(error => {
           console.error(error)
-          alert('There was a problem with sending order. Please try again.')
+          alert('There was a problem with sending Your order. Please try again.')
         })
     }     
   }
