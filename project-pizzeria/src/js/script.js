@@ -455,8 +455,14 @@ const templates = {
       fetch(url, options)
         .then(function(response){
           return response.json();
-        }).then(function(parsedResponse){
-          console.log('parsedResponse', parsedResponse);
+        })
+        .then(function(parsedResponse){
+          console.log('parsedResponse', parsedResponse)
+          alert('The order was send succesfully');
+        })
+        .catch(error => {
+          console.error(error)
+          alert('There was a problem with sending order. Please try again.')
         })
     }     
   }
