@@ -180,7 +180,7 @@ const templates = {
           const option = param.options[optionId];
           const optionImage = thisProduct.dom.imageWrapper.querySelector(`.${paramId}-${optionId}`);
 
-          console.log('Option Image:', optionImage);
+         console.log('Option Image:', optionImage);
           if (optionImage != null){
             optionImage.classList.remove(visible);
           }
@@ -190,18 +190,20 @@ const templates = {
 
             if(!option.default) {
               price += parseFloat(option.price); 
-          
-              if(optionImage) {
-                optionImage.classList.add(visible);
-              }
             }
-            } else {
+            
+            if(optionImage) {
+                optionImage.classList.add(visible);
+            } 
+          } else {
             if (option.default) {
               price -= parseFloat(option.price);
-              if (optionImage) {
-                optionImage.classList.remove(visible);
-              }
             }
+            
+            if (optionImage) {
+                optionImage.classList.remove(visible);
+            }
+            
           } 
         }
       }
