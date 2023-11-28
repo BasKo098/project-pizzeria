@@ -48,7 +48,7 @@ import Booking from './components/Booking.js';
       }
     
        /*add class"active to matching links, remove from non-matching */
-      thisApp.navLinks = document.querySelector(select.widgets.nav.links);
+      thisApp.navLinks = document.querySelectorAll(select.widgets.nav.links);
       console.log(thisApp.navLinks);
       for(let link of thisApp.navLinks) {
         link.classList.toggle(
