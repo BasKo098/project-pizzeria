@@ -1,4 +1,4 @@
-import {select, settings} from './settings.js';
+import { settings, select } from '../setting.js';
 
 
 class AmountWidget {
@@ -66,5 +66,5 @@ class AmountWidget {
       });
     }
   } 
-  
+
   export default AmountWidget;
