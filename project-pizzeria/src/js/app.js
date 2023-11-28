@@ -1,4 +1,4 @@
-import { settings, select, classNames, templates, dataSource } from './setting.js';
+import { settings, select, classNames, templates } from './settings.js';
 import Product from './components/Product.js';
 import Cart from './components/Cart.js';
 import Booking from './components/Booking.js';
@@ -7,7 +7,8 @@ import Booking from './components/Booking.js';
     initPages: function(){
       const thisApp = this;
       thisApp.pages = document.querySelector(select.containerOf.pages).children;
-      thisApp.navLinks = document.querySelector(select.nav.links);
+      thisApp.navLinks = document.querySelectorAll(select.nav.links);
+   
       const idFromHash = window.location.hash.replace('#/', '');
       console.log('idFromHash', idFromHash);
 
@@ -59,13 +60,29 @@ import Booking from './components/Booking.js';
     initMenu: function(){
       const thisApp = this;
       for(let productData in thisApp.data.products) {
-        new Product(thisApp.data.products[productData].id, thisApp.data.products[productData]);
+        new Product(
+          thisApp.data.products[productData].id, 
+          thisApp.data.products[productData]);
       }
     },  
     
     initData: function(){
-    const thisApp = this;
-    thisApp.data = dataSource;
+      const thisApp = this;
+      thisApp.data = {};
+      const url = settings.db.url + '/' + settings.db.products;
+      fetch(url)
+      .then(function (rawResponse) {
+        return rawResponse.json();
+      })
+      .then(function (parsedResponse) {
+        console.log('parsedResponse', parsedResponse);
+
+        /*save parsedResponse as thisApp.data.products */
+        thisApp.data.products = parsedResponse;
+
+        /*execute initMenu method */
+        thisApp.initMenu();
+      });    
     },
 
     initCart: function(){
@@ -80,37 +97,28 @@ import Booking from './components/Booking.js';
 
     initBooking: function(){
       const thisApp = this;
-      const widgetContainer = document.querySelector(select.containerOf.booking);
-      thisApp.booking = new Booking(widgetContainer);
+      const bookingContainer = document.querySelector(select.containerOf.booking);
+      thisApp.booking = new Booking(bookingContainer);
     },
 
-    init: function(){
+    init: function () {
       const thisApp = this;
-
       console.log('*** App starting ***');
       console.log('thisApp:', thisApp);
       console.log('classNames:', classNames);
       console.log('settings:', settings);
       console.log('templates:', templates);
+  
       thisApp.initPages();
-      
-
-      thisApp.data = {};
-      const url = settings.db.url + '/' + settings.db.products;
-      fetch(url)
-          .then(function(rawResponse){
-            return rawResponse.json();
-          })
-          .then(function(parsedResponse){
-            /* save ParsedResponse as thisApp.data.products */
-            thisApp.data.products = parsedResponse;
-            /*execute initMenu method */
-            thisApp.initMenu();
-          })
+      thisApp.initData();
+      /*thisApp.initMenu();*/
       thisApp.initCart();
       thisApp.initBooking();
     },
   };
-
+  
   app.init();
+  
+
+ 
 
