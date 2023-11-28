@@ -156,7 +156,7 @@ class Product {
       return params;
     }
 
-    preparateCartProduct(){
+    prepareCartProduct(){
       const thisProduct = this;
       const productSummary = {
         id: thisProduct.id,
