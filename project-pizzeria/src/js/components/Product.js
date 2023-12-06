@@ -91,7 +91,6 @@ class Product {
           const option = param.options[optionId];
           const optionImage = thisProduct.dom.imageWrapper.querySelector(`.${paramId}-${optionId}`);
 
-         console.log('Option Image:', optionImage);
           if (optionImage != null){
             optionImage.classList.remove(visible);
           }
@@ -102,11 +101,10 @@ class Product {
             if(!option.default) {
               price += parseFloat(option.price); 
             }
-            
             if(optionImage) {
                 optionImage.classList.add(visible);
             } 
-          } else {
+            } else {
             if (option.default) {
               price -= parseFloat(option.price);
             }

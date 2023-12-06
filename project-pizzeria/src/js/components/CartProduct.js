@@ -62,7 +62,6 @@ class CartProduct {
       if (thisCartProduct.dom.remove) {
         thisCartProduct.dom.remove.addEventListener('click', (event) => {
           event.preventDefault();
-          console.log('removed');
           thisCartProduct.remove();
         });
       }

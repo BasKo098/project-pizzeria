@@ -49,7 +49,6 @@ import Booking from './components/Booking.js';
     
        /*add class"active to matching links, remove from non-matching */
       thisApp.navLinks = document.querySelectorAll(select.widgets.nav.links);
-      console.log(thisApp.navLinks);
       for(let link of thisApp.navLinks) {
         link.classList.toggle(
           classNames.nav.active, 
@@ -76,7 +75,6 @@ import Booking from './components/Booking.js';
         return rawResponse.json();
       })
       .then(function (parsedResponse) {
-        console.log('parsedResponse', parsedResponse);
 
         /*save parsedResponse as thisApp.data.products */
         thisApp.data.products = parsedResponse;
