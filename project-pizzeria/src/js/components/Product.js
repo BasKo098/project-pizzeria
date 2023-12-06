@@ -156,7 +156,7 @@ class Product {
       return params;
     }
 
-    prepareCartProduct(){
+    prepareCartProduct() {
       const thisProduct = this;
       const productSummary = {
         id: thisProduct.id,
@@ -169,8 +169,7 @@ class Product {
       return productSummary;
     }
 
-
-      addToCart() {
+    addToCart() {
       const thisProduct = this;
 
       //thisProduct.name = thisProduct.data.name;
