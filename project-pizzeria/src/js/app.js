@@ -10,7 +10,6 @@ import Booking from './components/Booking.js';
       thisApp.navLinks = document.querySelectorAll(select.widgets.nav.links);
    
       const idFromHash = window.location.hash.replace('#/', '');
-      console.log('idFromHash', idFromHash);
 
       let pageMatchingHash = thisApp.pages[0].id;
 
