@@ -10,6 +10,7 @@ class Booking {
         thisBooking.render(element);
         thisBooking.initWidgets();
         thisBooking.getData();
+        thisBooking.selected = {};
     }
 
     getData() {
