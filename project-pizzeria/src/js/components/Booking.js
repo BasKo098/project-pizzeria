@@ -198,7 +198,7 @@ class Booking {
          }
        }
 
-    initTables(event){
+    initTables(event) {
         const thisBooking = this;
         const tableId = event.target.getAttribute('data-table');
         const isBooked = event.target.classList.contains(classNames.booking.tableBooked);
