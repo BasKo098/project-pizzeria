@@ -115,7 +115,7 @@
       width: 30px;
       height: 30px;
       text-align: center;
-      margin: 0 ($base-size / 2);
+      margin: calc($base-size / 2) 0;
       padding: 0;
     }
   
