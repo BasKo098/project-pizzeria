@@ -35,7 +35,7 @@ class Home {
               groupCells: '1',
             };
             // eslint-disable-next-line no-undef
-            new Flickity(thisHome.dom.carousel, {options});
+            new Flickity(thisHome.dom.carousel, options);
     } 
 }
 
