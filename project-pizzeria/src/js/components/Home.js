@@ -19,7 +19,7 @@ class Home {
 
     render(element) {
         const generatedHTML = templates.home();
-        console.log('generateHTML ', generatedHTML);
+        //console.log('generateHTML ', generatedHTML);
         const generatedDOM = utils.createDOMFromHTML(generatedHTML);
         element.appendChild(generatedDOM);
     }   
