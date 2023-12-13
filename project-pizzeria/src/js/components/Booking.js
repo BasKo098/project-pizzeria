@@ -215,7 +215,7 @@ class Booking {
                 thisBooking.selected = tableId;
             }
         }
-        console.log('selected', thisBooking.selected);
+        //console.log('selected', thisBooking.selected);
     }
 
     sendBooking() {
