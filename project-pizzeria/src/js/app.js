@@ -114,7 +114,6 @@ import Home from './components/Home.js';
           /* get page id from href attibute*/
           //const linkId = clickedElement.getAttribute('href').replace('#','');
           const linkId = clickedElement.getAttribute('href').replace(/#/g, '');
-          console.log('linkId ',linkId);
           /* run thisApp.activatePage with that id*/
       
           thisApp.avctivatePage(linkId);
