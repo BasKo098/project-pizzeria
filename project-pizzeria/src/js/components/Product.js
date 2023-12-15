@@ -101,10 +101,12 @@ class Product {
             if(!option.default) {
               price += parseFloat(option.price); 
             }
+
             if(optionImage) {
                 optionImage.classList.add(visible);
-            } 
-            } else {
+            }
+
+          } else {
             if (option.default) {
               price -= parseFloat(option.price);
             }
