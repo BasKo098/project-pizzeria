@@ -134,8 +134,7 @@ class Booking {
             if (!isNaN(tableId)){
                 tableId = parseInt(tableId);
             } 
-            if (!allAvailable
-                &&
+            if (!allAvailable &&
                 thisBooking.booked[thisBooking.date][thisBooking.hour].includes(tableId)
             ){
                 table.classList.add(classNames.booking.tableBooked);
@@ -248,9 +247,11 @@ class Booking {
         fetch(url, options)
           .then(function (response) {
             return response.json();
-          }).then(function (parsedResponse) {
-            console.log('parsedResponse', parsedResponse);
+          }).then(function () {
             thisBooking.makeBooked(payload.date, payload.hour, payload.duration, payload.table);
+          })
+          .catch (function (error) {
+            alert("Something went wrong, please try again: ", error);
           });
       }
     }
