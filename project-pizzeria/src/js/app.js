@@ -112,9 +112,12 @@ import Home from './components/Home.js';
           const clickedElement = this;
           event.preventDefault();
           /* get page id from href attibute*/
-          const linkId = clickedElement.getAttribute('href').replace('#','');
+          //const linkId = clickedElement.getAttribute('href').replace('#','');
+          const linkId = clickedElement.getAttribute('href').replace(/#/g, '');
+          console.log('linkId ',linkId);
           /* run thisApp.activatePage with that id*/
-          thisApp. avctivatePage(linkId);
+      
+          thisApp.avctivatePage(linkId);
           /* Change URL hash*/
           window.location.hash = '#/' + linkId;
         });

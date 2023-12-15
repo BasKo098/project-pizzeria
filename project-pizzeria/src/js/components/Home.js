@@ -4,13 +4,15 @@ import {utils} from '../utils.js';
 class Home {
     constructor(element) {
     const thisHome = this;
-    thisHome.render(element);
-    thisHome.getElement(element);
-    thisHome.initCarousel();
+
+        thisHome.render(element);
+        thisHome.getElement(element);
+        thisHome.initCarousel();
     }
 
     getElement(element) {
         const thisHome = this;
+        
         thisHome.dom = {};
         thisHome.dom.wrapper = element;
         thisHome.dom.carousel = thisHome.dom.wrapper.querySelector(select.containerOf.carousel);
@@ -26,6 +28,7 @@ class Home {
 
     initCarousel() {
         const thisHome = this;
+
             const options = {
               cellAlign: 'center',
               contain: true,
