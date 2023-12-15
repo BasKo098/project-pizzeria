@@ -112,7 +112,6 @@ class Product {
             if (optionImage) {
                 optionImage.classList.remove(visible);
             }
-            
           } 
         }
       }
