@@ -15,7 +15,7 @@ import Home from './components/Home.js';
       let pageMatchingHash = thisApp.pages[0].id;
 
       for (let page of thisApp.pages){
-        if(page.id == idFromHash){
+        if(page.id === idFromHash){
           pageMatchingHash = page.id;
           break;
         }
@@ -41,6 +41,7 @@ import Home from './components/Home.js';
 
     avctivatePage: function(pageId) {
       const thisApp = this;
+
       /*add class"active to matching pages, remove from non-matching */
       for(let page of thisApp.pages) { 
         page.classList.toggle(classNames.pages.active, page.id == pageId);
@@ -52,7 +53,7 @@ import Home from './components/Home.js';
         link.classList.toggle(
           classNames.nav.active, 
           link.getAttribute('href') == '# '+ pageId
-          );
+        );
       }
     },
 
@@ -101,25 +102,24 @@ import Home from './components/Home.js';
 
     initHome: function (){
       const thisApp = this;
-        thisApp.homeContainer = document.querySelector(select.containerOf.home);
+      
+      thisApp.homeContainer = document.querySelector(select.containerOf.home);
+      thisApp.home = new Home(thisApp.homeContainer);
+      thisApp.homeLinks = document.querySelectorAll(select.home.homeLinks)
 
-        thisApp.home = new Home(thisApp.homeContainer);
-
-        thisApp.homeLinks = document.querySelectorAll(select.home.homeLinks)
-        for (let homeLink of thisApp.homeLinks){
-          homeLink.addEventListener('click', function(event){
-            const clickedElement = this;
-            console.log('clickedelement',clickedElement);
-            event.preventDefault();
-            /* get page id from href attibute*/
-            const linkId = clickedElement.getAttribute('href').replace('#','');
-            /* run thisApp.activatePage with that id*/
-            thisApp. avctivatePage(linkId);
-            /* Change URL hash*/
-            window.location.hash = '#/' + linkId;
-          });
-        }
-      },
+      for (let homeLink of thisApp.homeLinks){
+        homeLink.addEventListener('click', function(event){
+          const clickedElement = this;
+          event.preventDefault();
+          /* get page id from href attibute*/
+          const linkId = clickedElement.getAttribute('href').replace('#','');
+          /* run thisApp.activatePage with that id*/
+          thisApp. avctivatePage(linkId);
+          /* Change URL hash*/
+          window.location.hash = '#/' + linkId;
+        });
+      }
+    },
 
     init: function () {
       const thisApp = this;
