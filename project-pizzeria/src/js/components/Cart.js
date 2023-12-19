@@ -83,11 +83,6 @@ class Cart {
       for (let singleTotalPrice of thisCart.dom.totalPrice) {
         singleTotalPrice.innerHTML = thisCart.totalPrice;
       }
-    
-      console.log('total Number: ' + thisCart.totalNumber);
-      console.log('subtotalPrice : ' + thisCart.subtotalPrice);
-      console.log('deliveryFee: ' + deliveryFee);
-      console.log('total Price: ' + thisCart.totalPrice);
     }
 
     remove(productToRemove) {
